@@ -1,0 +1,30 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "9041 Assignment 2",
+    "section": "",
+    "text": "The data in this document is a compilation of self-reported measures from 63 different individuals, assessing Social Anxiety, Attachment Anxiety, Self-Esteem, obtained through responses to a set of questions.\nParticipants also reported on Age, Gender, Relationship Status, and Ethnicity"
+  },
+  {
+    "objectID": "index.html#intro",
+    "href": "index.html#intro",
+    "title": "9041 Assignment 2",
+    "section": "",
+    "text": "The data in this document is a compilation of self-reported measures from 63 different individuals, assessing Social Anxiety, Attachment Anxiety, Self-Esteem, obtained through responses to a set of questions.\nParticipants also reported on Age, Gender, Relationship Status, and Ethnicity"
+  },
+  {
+    "objectID": "index.html#methods",
+    "href": "index.html#methods",
+    "title": "9041 Assignment 2",
+    "section": "Methods",
+    "text": "Methods\n\nParticipants\nThe sample consisted of 63 participants. Their demographic characteristics are shown in Table 1.\n\n\n\n\n\n\n\n\nParticipant Relationship Status by Age\n\n\nGender.Char\nDivorced\nIn a Relationship\nMarried\nNever Been in a Relationship\nPrefer Not to Say\n\n\n\n\nFemale\n0\n43\n4\n1\n2\n\n\nMale\n1\n11\n0\n0\n1\n\n\n\n\n\n\n\n\n\nMeasures\nAttachment anxiety was measured using a shortened version of the anxiety subscale of the Experiences in Close Relationships scale, consisting of the nine items that loaded most strongly on the anxiety factor in Sibley, Fischer and Liu (2005). Items were rated from 1 to 7 (α = 0.94). Social anxiety was measured with the 20-item Social Interaction Anxiety Scale (α = 0.9), and self-esteem with the 10-item Rosenberg Self-Esteem Scale, rated from 1 to 4 (α = 0.85).\n\n\nData Analysis Strategy\nBefore scoring, negatively worded items were reverse-keyed so that higher scores reflected more of each construct. This applied to items 5, 9 and 11 of the Social Anxiety Scale and items 2, 5, 6, 8 and 9 of the Rosenberg Self-Esteem Scale; no attachment anxiety items were reversed. Scale scores were calculated as the mean of each participant’s item responses using scoreItems() from the psych package, and internal consistency was assessed with Cronbach’s alpha."
+  },
+  {
+    "objectID": "index.html#results",
+    "href": "index.html#results",
+    "title": "9041 Assignment 2",
+    "section": "Results",
+    "text": "Results\nDescriptive statistics for the full sample are shown in Table 2.\n\n\n\n\n\n\n\n\nParticipant Descriptive Stats\n\n\nScales\nmean\nmedian\nsd\nrange\nAlpha\n\n\n\n\nSocial Interaction Anxiety\n2.504595\n2.421053\n0.6974451\n2.947368\n0.90\n\n\nAttachment Anxiety\n3.398589\n3.111111\n1.6209543\n5.888889\n0.94\n\n\nRosenberg Self-Esteem\n2.234921\n2.200000\n0.5074156\n2.200000\n0.85\n\n\n\n\n\n\n\nParticipants reported a mean social interaction anxiety score of 2.5, a mean attachment anxiety score of 3.4, and a mean self-esteem score of 2.23.\nTable 3 shows the same statistics for female participants only (n = 50).\n\n\n\n\n\n\n\n\nFemale Participant Descriptive Statistics\n\n\nScales\nmean\nmedian\nsd\nrange\nAlpha\n\n\n\n\nSocial Interaction Anxiety\n2.545263\n2.526316\n0.7198250\n2.947368\n0.90\n\n\nAttachment Anxiety\n3.431111\n3.111111\n1.7133507\n5.888889\n0.94\n\n\nRosenberg Self-Esteem\n2.240000\n2.200000\n0.5318432\n2.200000\n0.86\n\n\n\n\n\n\n\nAmong female participants, mean scores were 2.55 for social interaction anxiety, 3.43 for attachment anxiety, and 2.24 for self-esteem."
+  }
+]

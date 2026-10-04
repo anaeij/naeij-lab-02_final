@@ -1,0 +1,265 @@
+---
+title: "9041 Assignment 2"
+author: Ali Naeij 
+date: 02/10/2026
+format: 
+    html:
+      toc: true
+      code-fold: true
+      code-summary: "Show code"
+      df-print: paged
+execute:
+    echo: false
+    warning: false
+---
+
+
+```{r, load libraries}
+#| output: FALSE
+
+
+library(tidyverse)
+library(readxl)
+library(psych)
+library(gt)
+library(janitor)
+```
+```{r}
+#| output: false
+
+#loading and inspecting data
+data <- read.csv("Copy of Attachment_Anxiety_Data.csv")
+
+is.numeric(data$Age.group)
+
+mutated.data <- data |>
+  mutate(Gender.Char = case_when(Gender == 1 ~ "Male", 
+                                 Gender == 2 ~ "Female")) |>
+  mutate(Relationship.Char = case_when(Relationship == 1 ~ "Married",
+                                       Relationship %in% c(2,5)  ~ "In a Relationship",
+                                       Relationship == 4 ~ "Divorced",
+                                       Relationship == 6 ~ "Never Been in a Relationship",
+                                       Relationship == 7 ~ "Prefer Not to Say")) |>
+  mutate(Ethnicity.Char = case_when (Ethnicity == 1 ~ "Caucasian",
+                                     Ethnicity == 2 ~ "Asian",
+                                     Ethnicity == 5 ~ "Other",
+                                     Ethnicity == 6 ~ "Prefer Not to Say")) |>
+  mutate(Age.Char = case_when (Age.group == 1 ~ "18-24",
+                               Age.group == 2 ~ "24-34",
+                               Age.group == 3 ~ "35-44",
+                               Age.group == 4 ~ "45-54",
+                               Age.group == 5 ~ "55-64"))
+  
+```
+
+
+```{r, create keys}
+#| output: FALSE
+
+SA.Keys <- list(Social.Anxiety=c("SA_1","SA_2","SA_3","SA_4","-SA_5","SA_6","SA_7","SA_8",
+                             "-SA_9","SA_10","-SA_11","SA_12","SA_13","SA_14","SA_15", 
+                             "SA_16","SA_17","SA_18","SA_19"))
+AA.Keys <- list(Attachment.Anxiety=c("AA_1", "AA_2", "AA_3", "AA_4", 
+                                  "AA_5", "AA_6", "AA_7", "AA_8", "AA_9"))
+SEst.Keys <- list(Rosenberg.SelfEsteem = c("SEst_1", "-SEst_2", "SEst_3", "SEst_4","-SEst_5",
+                                           "-SEst_6", "SEst_7", "-SEst_8", "-SEst_9", "SEst_10"))
+
+```
+
+```{r, score items}
+#| output: FALSE
+
+Scores.SA <- scoreItems(SA.Keys, mutated.data, min = 0, max = 5)
+Scores.AA <- scoreItems(AA.Keys, mutated.data, min =1, max = 7)
+scores.SEst <- scoreItems(SEst.Keys, mutated.data, min = 1, max = 4)
+```
+
+```{r, combine scores}
+#| output: FALSE
+
+Scores.SA.df <- as.data.frame(Scores.SA$scores)
+Scores.AA.df <- as.data.frame(Scores.AA$scores)
+scores.SEst.df <- as.data.frame(scores.SEst$scores)
+
+allscores.df <- cbind(Scores.SA.df, Scores.AA.df, scores.SEst.df)
+```
+
+```{r, combine dataframes}
+#| output: FALSE
+
+final.data <- cbind(mutated.data, allscores.df)
+```
+
+```{r, simplyfying the datafram}
+#| output: false
+
+
+simple.final.data <- final.data |> 
+  select(Gender.Char, Age.Char, Ethnicity.Char, Relationship.Char, Social.Anxiety, Attachment.Anxiety, Rosenberg.SelfEsteem )
+```
+
+
+```{r, creating a demographic table}
+#| output: false
+
+
+demographic.table <- simple.final.data |>
+  tabyl(Gender.Char, Relationship.Char)
+
+demographic.gt <- demographic.table |> 
+  gt() |> 
+  tab_header(title = "Participant Relationship Status by Age")
+```
+
+```{r, score table}
+#| output: false
+
+
+#step 1: summary statistics for the 3 scales
+
+summary <- simple.final.data |> 
+  select(Social.Anxiety, Attachment.Anxiety, Rosenberg.SelfEsteem) |>
+  describe() |> 
+  as.data.frame()
+
+#step 2: sample size
+sample.size <- nrow(simple.final.data)
+
+#step 3: scales column
+summary$Scales <- c("Social Interaction Anxiety", "Attachment Anxiety", "Rosenberg Self-Esteem")
+
+#step : alphas, rounded to 2 decimals
+alphas <- round(c(Scores.SA$alpha,
+                  Scores.AA$alpha,
+                  scores.SEst$alpha), 2)
+
+#simplifying the table 
+
+summary.table <- summary |> 
+  select(Scales, mean, median, sd, range)
+
+summary.table <- cbind(summary.table, Alpha = alphas)
+
+summary.gt <- summary.table |>
+  gt() |>
+  tab_header("Participant Descriptive Stats")
+
+```
+
+```{r, filtering by variable}
+#| output: false
+
+
+female.data <- simple.final.data |> 
+  filter(Gender.Char == "Female")
+
+nrow(female.data)
+```
+```{r, filtered data and scored table}
+#| output: false
+
+#summary stats for the filtered group
+summary.female <- female.data |> 
+  select(Social.Anxiety, Attachment.Anxiety, Rosenberg.SelfEsteem) |>
+  describe() |>
+  as.data.frame()
+
+sample.size.female <- nrow(female.data)
+
+summary.female$Scales <- c("Social Interaction Anxiety",
+                           "Attachment Anxiety",
+                           "Rosenberg Self-Esteem")
+
+#Alphas for the female only dataset
+
+female.items <- final.data |> filter(Gender.Char == "Female")
+
+Scores.SA.female <- scoreItems(SA.Keys, female.items, min = 0, max= 5)
+Scores.AA.female <- scoreItems(AA.Keys, female.items, min = 1, max = 7)
+Scores.SEst.female <- scoreItems(SEst.Keys, female.items, min = 1, max = 4)
+
+alphas.female <- round(c(Scores.SA.female$alpha,
+                         Scores.AA.female$alpha,
+                         Scores.SEst.female$alpha), 2)
+
+summary.table.female <- summary.female |> 
+  select(Scales, mean, median, sd, range)
+
+summary.table.female <- cbind(summary.table.female, Alpha = alphas.female)
+
+summary.female.gt <- summary.table.female |> 
+  gt() |> 
+  tab_header(title = "Female Participant Descriptive Statistics")
+
+```
+
+## Intro
+
+The data in this document is a compilation of self-reported measures from 63 different individuals, assessing Social Anxiety, Attachment Anxiety, Self-Esteem, obtained through responses to a set of questions. 
+
+Participants also reported on Age, Gender, Relationship Status, and Ethnicity
+
+## Methods
+
+### Participants
+
+The sample consisted of `r sample.size` participants. Their demographic characteristics are shown in Table 1.
+
+```{r show-demographics}
+demographic.gt
+```
+
+
+### Measures
+
+Attachment anxiety was measured using a shortened version of the anxiety subscale of the Experiences in Close Relationships scale, consisting of the nine items that loaded most strongly on the anxiety factor in Sibley, Fischer and Liu (2005). Items were rated from 1 to 7 (α = `r alphas[2]`). Social anxiety was measured with the 20-item Social Interaction Anxiety Scale (α = `r alphas[1]`), and self-esteem with the 10-item Rosenberg Self-Esteem Scale, rated from 1 to 4 (α = `r alphas[3]`).
+
+### Data Analysis Strategy
+
+Before scoring, negatively worded items were reverse-keyed so that higher scores reflected more of each construct. This applied to items 5, 9 and 11 of the Social Anxiety Scale and items 2, 5, 6, 8 and 9 of the Rosenberg Self-Esteem Scale; no attachment anxiety items were reversed. Scale scores were calculated as the mean of each participant's item responses using `scoreItems()` from the psych package, and internal consistency was assessed with Cronbach's alpha.
+
+
+## Results
+
+Descriptive statistics for the full sample are shown in Table 2.
+
+```{r show-summary}
+summary.gt
+```
+
+Participants reported a mean social interaction anxiety score of `r round(summary.table$mean[1], 2)`, a mean attachment anxiety score of `r round(summary.table$mean[2], 2)`, and a mean self-esteem score of `r round(summary.table$mean[3], 2)`.
+
+Table 3 shows the same statistics for female participants only (n = `r sample.size.female`).
+
+```{r show-summary-female}
+summary.female.gt
+```
+
+Among female participants, mean scores were `r round(summary.table.female$mean[1], 2)` for social interaction anxiety, `r round(summary.table.female$mean[2], 2)` for attachment anxiety, and `r round(summary.table.female$mean[3], 2)` for self-esteem.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
